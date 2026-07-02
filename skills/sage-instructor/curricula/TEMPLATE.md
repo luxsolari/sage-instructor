@@ -39,6 +39,13 @@ teaches:
   - Raylib
   - CMake
 
+# Optional — real-world references Sage consulted while generating this
+# curriculum (Track Setup's grounding-research step). Only present when that
+# step ran; omit entirely for tracks generated from stable, well-known
+# fundamentals that didn't need a live check. Title + URL is enough.
+sources:
+  - "Raylib cheatsheet — https://www.raylib.com/cheatsheet/cheatsheet.html"
+
 # How Sage verifies an exercise before marking it complete (Step 6b).
 # Either a shell command template — {file} is substituted with the exercise's
 # entry point — or the literal string "manual" for exercises with no

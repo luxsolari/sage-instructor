@@ -1,5 +1,75 @@
 # Changelog
 
+## [1.6.0] — 2026-07-02
+
+### Added
+- **Grounding-research step in Track Setup.** Before generating a custom
+  curriculum, Sage now judges whether the stated topic is a fast-moving
+  library/framework with a versioned, changing API (vs. stable fundamentals
+  training data already gets right) and, if so, uses WebSearch/WebFetch to
+  pull current docs before writing a single exercise — recording what it
+  consulted in a new optional `sources` YAML field (see `TEMPLATE.md`).
+  Motivated by the original "use an LLM to teach me stuff" premise: a
+  generated curriculum for something like Raylib is only as good as how
+  current its underlying facts are.
+- **Track Setup topic shortcut.** When the learner's trigger message already
+  names a specific topic (e.g. "teach me Go, let's build something" instead
+  of a bare `/sage-start`), Round 0 no longer asks blind: a topic matching no
+  bundled curriculum skips Round 0's question entirely (and Round 1, since
+  "what do you want to learn?" was already answered); a topic matching one
+  compresses Round 0 into a direct confirm naming that track instead of the
+  generic list. A genuinely ambiguous topic still asks normally.
+- **`tests/scenarios/09-grounding-research-trigger.md`.** Tests the
+  grounding-research trigger branch (C++/Raylib) — confirms a real
+  WebSearch/WebFetch call happens, the `sources` field gets populated with
+  genuine references, and at least one generated API element traces back to
+  what was actually found (not a plausible-sounding invention).
+- **`tests/scenarios/10-track-setup-topic-shortcut.md`.** Two-part scenario
+  for the new topic shortcut: Part A (Elixir, no bundled match) proves the
+  skip branch; Part B (Python, matches `python-basics`) proves the compress
+  branch still offers — and honors — the custom-track alternative rather
+  than railroading toward the match.
+
+### Changed
+- **`tests/scenarios/06-custom-track-creation.md`** gained a no-`sources`
+  assertion (proving the grounding-research step correctly skips for stable
+  topics), and its trigger message was reverted to topic-neutral ("Hey, I
+  want to pick up a new skill — what have you got?", topic revealed at Round
+  1 instead). Needed because the scenario's own regression target — Round 0
+  presenting the full option list — only holds when no topic was pre-stated;
+  a topic-naming trigger now legitimately changes Round 0's behavior under
+  the new shortcut rule. Also swapped its example topic from Rust to Go: the
+  original topic collided with the `rust-cli` curriculum added in 1.5.0,
+  making Round 0 offer three options instead of the two the scenario assumed
+  — a real staleness bug this session's own earlier release introduced.
+- **`tests/scenarios/09-grounding-research-trigger.md`**'s trigger message
+  was likewise reverted to topic-neutral for the same reason, keeping it
+  focused on one regression target (grounding-research) rather than
+  entangling it with the new shortcut rule.
+
+### Verified
+- **`09-grounding-research-trigger`**: 10/10 PASS. Real tool calls confirmed
+  (WebSearch + two WebFetch calls against raylib.com and its GitHub wiki);
+  the generated `verify` command's linker flags and the exercises' API
+  calls (`InitWindow`, `DrawCircle`, `RAYWHITE`, ...) all traced back to the
+  actual fetched content, including catching that Raylib is currently on
+  v6.0 — a genuine grounding signal, not a coincidence.
+- **`10-track-setup-topic-shortcut`**: 10/10 PASS (5/5 each part). Skip and
+  compress branches both confirmed; picking custom despite a compressed
+  match correctly avoided defaulting to the bundled track.
+- **`06-custom-track-creation`** (re-run after the Go/topic-neutral fix):
+  9/9 PASS.
+  - Soft findings not acted on this pass: the "genuinely ambiguous" branch
+    of the topic-shortcut rule has no worked example and remains untested —
+    candidate for a future scenario if the shortcut sees real use; the
+    grounding-research rule doesn't say how many sources are "enough" to
+    prove a claim was checked rather than assumed; a scratch-test-generated
+    curriculum's `verify` command was Linux-flag-specific with no
+    `prerequisites` callout — a curriculum-quality nit in generated output,
+    not a `SKILL.md` defect.
+- Pre-release checklist (`tests/README.md`/`CONTRIBUTING.md`) updated from
+  "all eight" to "all ten" scenarios.
+
 ## [1.5.0] — 2026-07-02
 
 ### Added
