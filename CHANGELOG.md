@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.7.2] — 2026-07-02
+
+### Fixed
+- **Axis fields could silently break if a session ran in a non-English
+  language.** Nothing previously told Sage to keep `mastery`, `consequence`,
+  and `intent` as their literal English tokens (`low`/`medium`/`high`,
+  `growth`/`balanced`/`output`) when writing a curriculum's frontmatter —
+  and Round 4's options are written verbatim from what the learner picks.
+  A learner conversing in, say, Spanish could plausibly get a translated
+  value written into the file instead, which the Three Axes calibration
+  logic wouldn't recognize, silently breaking calibration with no visible
+  error. Added an explicit instruction in `SKILL.md` to always persist
+  those three fields in English regardless of conversation language, while
+  letting the rest of the session converse naturally in whatever language
+  the learner uses.
+
 ## [1.7.1] — 2026-07-02
 
 ### Fixed

@@ -1,7 +1,7 @@
 # Sage Instructor
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.7.1-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.2-informational.svg)](CHANGELOG.md)
 
 A Claude Code plugin that turns Claude into **Sage** — an adaptive programming instructor that teaches through structured courses with discovery-first pedagogy, interactive exercises, and progress tracking.
 
