@@ -21,7 +21,12 @@ Open an issue describing: what you expected, what happened, and your Claude Code
    deterministic Tier 1 checks and needs no agent.
 5. Bumping the plugin version? Run `tests/README.md`'s full pre-release
    checklist (all ten Tier 2 scenarios) first.
-6. Submit a PR with a clear description
+6. Editing `skills/sage-instructor/references/philosophy.md`? Run `python3
+   scripts/check_framework_drift.py` first — it tells you whether the
+   upstream [three-axes-framework](https://github.com/luxsolari/three-axes-framework)
+   plugin has changed since `philosophy.md` was last reconciled against it.
+   Not required for every edit, but worth checking before a release.
+7. Submit a PR with a clear description
 
 ## Code of Conduct
 Be kind. Be constructive. We're all here to learn.
