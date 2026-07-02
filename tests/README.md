@@ -90,7 +90,7 @@ per-commit CI check.
 ### Pre-release checklist
 
 Before bumping the plugin version (`.claude-plugin/plugin.json` +
-`CHANGELOG.md`), run **all eight** scenarios in `scenarios/` — not just the
+`CHANGELOG.md`), run **all ten** scenarios in `scenarios/` — not just the
 ones nearest whatever you changed. Record the result (pass/fail per
 assertion) in the version's CHANGELOG entry the way 1.2.0 and the harness's
 own rollout did, so "we ran the harness" is checkable later instead of

@@ -89,12 +89,19 @@ Generate `.sage-profile.md` in the project root (using `references/learner-profi
 **Round 0 — Existing tracks** (only when Track Setup was triggered by onboarding — i.e. no `active_track` yet. Skip entirely when the learner explicitly ran `/new-track`: that command already states custom-track intent, don't second-guess it. Also skip if `curricula/` has nothing besides `TEMPLATE.md`.)
 If applicable, ask: "Want to start one of these, or build something custom?" Options: one per existing curriculum (using its `title`), plus "Build a custom track." If the learner picks an existing one, set it as `active_track`, confirm, and skip straight to Phase 0 — the rest of Track Setup is only for the custom path.
 
-**Round 1** — "What do you want to learn?" (free text)
+**If the trigger message already named a specific topic** (e.g. "teach me Go, let's build something" rather than a bare `/start`), don't ask Round 0 blind — use what was already said:
+- Clearly matches no existing curriculum's `title`/`teaches` → skip the question entirely, there's nothing to choose between. Say so in one line ("No bundled track covers Go yet, so let's build you a custom one.") and go straight into the custom-track interview.
+- Clearly matches one → still ask, but as a direct confirm naming that track, not the generic list: "Sounds like Python — want the bundled Python Foundations track, or build a custom one instead?" This is still a real choice (structured bundled track vs. one generated fresh) and shouldn't be assumed away.
+- Genuinely ambiguous which it matches, or matches more than one plausibly → ask Round 0 as normal rather than guessing.
+
+**Round 1** — "What do you want to learn?" (free text) — skip asking if the trigger message already answered this; carry that stated topic forward as Round 1's answer instead of asking the learner to repeat it.
 **Round 2** — "Is there a project this feeds into?" Options: Yes (follow up), No — general skill building
 **Round 3** — "How much do you know already?" Options: From scratch, Basics but rusty, Intermediate, Know a related language
 **Round 4** — "What's the priority?" Options: Pure learning (Growth), Build while learning (Balanced), Get productive fast (Output)
 
 Rounds 3 and 4 map directly to the curriculum's `mastery` and `intent` axis fields (Round 4's options are literally labeled with the axis values). `consequence` has no dedicated round — infer it from Round 2's answer instead: no stated project, or a personal/learning-only one → `low`; a project the learner describes as shared, user-facing, or otherwise stakes-bearing → `medium` or `high`, using judgment on what was actually described, not a fixed default.
+
+**Before generating, judge whether the topic needs grounding.** Training data goes stale fastest for fast-moving libraries/frameworks with versioned, changing APIs (a game/UI library, a cloud SDK, a build tool), and is thinnest for niche or narrow domains — Round 1's answer is the signal. When it applies, use WebSearch/WebFetch to pull the current official docs or getting-started material for what's being taught before writing a single exercise, so topics, exercise asserts, and the `verify` command reference the API as it actually exists now, not a plausible-sounding but possibly renamed/removed recollection. Skip this for stable fundamentals a language's core syntax rarely needs re-checking (e.g. "Python control flow," "SQL joins") — don't burn a research round on something training data already gets right. Record what was consulted in the generated curriculum's `sources` field (see `TEMPLATE.md`) when this step ran; omit the field entirely when it didn't. Either way, briefly tell the learner what (if anything) was checked before showing the generated curriculum, so they can flag it if a source looks wrong or outdated.
 
 Generate curriculum from `TEMPLATE.md`, confirm with learner, save to `curricula/<track>.md`.
 
