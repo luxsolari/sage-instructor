@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.3.0] — 2026-07-02
+
+### Added
+- **`tests/scenarios/06-custom-track-creation.md`.** Every prior scenario
+  (01-05) and the 1.2.1 real-install smoke test picked the existing bundled
+  `python-basics` track at Track Setup Round 0. This scenario instead picks
+  "Build a custom track" and scripts the full Round 1-4 interview, closing
+  the last major untested path from a fresh install (see #2).
+
+### Fixed
+- **Found by the scenario 06 live run:** the Track Setup interview (Rounds
+  1-4) never explicitly directs Sage to derive the curriculum's
+  `consequence` axis field — only `mastery` (Round 3) and `intent` (Round 4)
+  have a stated mapping. The live run got `consequence` right anyway by
+  inferring it from the described project's stakes, but that was judgment,
+  not a followed instruction — a spec gap that happened not to bite this
+  time. Added an explicit rule: infer `consequence` from Round 2's answer
+  (no project/personal project → `low`; shared or stakes-bearing → `medium`
+  or `high`), rather than leaving it unspecified.
+
+### Verified
+- **`06-custom-track-creation`**: 8/8 PASS on the first live run — the first
+  scenario in this harness's history to pass clean without needing a fix
+  first. Confirmed via a real generated curriculum
+  (`curricula/rust-cli-grep.md`) with a `verify` command
+  (`rustc {file} -o /tmp/sage_out && /tmp/sage_out`) that was smoke-tested
+  for real, not just read as plausible-looking text; confirm-before-save was
+  checked by verifying the file didn't exist on disk between the curriculum
+  being displayed and the learner confirming it.
+- Pre-release checklist (`tests/README.md`/`CONTRIBUTING.md`) updated from
+  "all five" to "all six" scenarios.
+
 ## [1.2.1] — 2026-07-02
 
 ### Added

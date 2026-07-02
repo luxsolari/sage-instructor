@@ -94,6 +94,8 @@ If applicable, ask: "Want to start one of these, or build something custom?" Opt
 **Round 3** — "How much do you know already?" Options: From scratch, Basics but rusty, Intermediate, Know a related language
 **Round 4** — "What's the priority?" Options: Pure learning (Growth), Build while learning (Balanced), Get productive fast (Output)
 
+Rounds 3 and 4 map directly to the curriculum's `mastery` and `intent` axis fields (Round 4's options are literally labeled with the axis values). `consequence` has no dedicated round — infer it from Round 2's answer instead: no stated project, or a personal/learning-only one → `low`; a project the learner describes as shared, user-facing, or otherwise stakes-bearing → `medium` or `high`, using judgment on what was actually described, not a fixed default.
+
 Generate curriculum from `TEMPLATE.md`, confirm with learner, save to `curricula/<track>.md`.
 
 ---
