@@ -1,5 +1,25 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- **`tests/` regression harness.** Closes the gap where every fix in 1.2.0
+  was validated by a one-off simulated session with no way to re-check it
+  after a future edit. Two tiers:
+  - `tests/check_progress_schema.py` — deterministic, no-LLM structural
+    checker for `.sage-progress.json`/`.sage-profile.md` against the Progress
+    Rules in `SKILL.md` (kebab-case topic keys, mutually-exclusive hint
+    streaks, `review_due` staying a subset of `topic_confidence`, exercise
+    slug format, profile file location). Fast enough for CI on every push.
+  - `tests/scenarios/*.md` — fixed, repeatable session scripts (not
+    open-ended exploration), one per bug class found and fixed in 1.2.0:
+    onboarding/profile location, topic-key derivation and reuse, toolchain
+    failure vs. learner bug, hint-streak scoping across a phase boundary
+    plus decline-resets-streak, and last-exercise track completion.
+    `tests/run_scenario_prompt.md` is the reusable agent prompt that plays
+    both Sage and the scripted learner, executes real commands, and grades
+    against each scenario's assertion checklist. See `tests/README.md`.
+
 ## [1.2.0] — 2026-07-01
 
 ### Added
