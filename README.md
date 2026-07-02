@@ -77,8 +77,11 @@ Teaching intensity adapts via the [Three Axes Framework](https://github.com/luxs
 
 ```
 git clone https://github.com/luxsolari/sage-instructor
-claude plugin validate ./sage-instructor
+claude plugin validate ./sage-instructor   # verify structure
+claude --plugin-dir ./sage-instructor      # load it for a real session, no install needed
 ```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor workflow, including running the regression tests.
 
 ## First Run
 
