@@ -1,5 +1,103 @@
 # Changelog
 
+## [1.2.1] — 2026-07-02
+
+### Added
+- **`tests/` regression harness.** Closes the gap where every fix in 1.2.0
+  was validated by a one-off simulated session with no way to re-check it
+  after a future edit. Two tiers:
+  - `tests/check_progress_schema.py` — deterministic, no-LLM structural
+    checker for `.sage-progress.json`/`.sage-profile.md` against the Progress
+    Rules in `SKILL.md` (kebab-case topic keys, mutually-exclusive hint
+    streaks, `review_due` staying a subset of `topic_confidence`, exercise
+    slug format, profile file location). Fast enough for CI on every push.
+  - `tests/scenarios/*.md` — fixed, repeatable session scripts (not
+    open-ended exploration), one per bug class found and fixed in 1.2.0:
+    onboarding/profile location, topic-key derivation and reuse, toolchain
+    failure vs. learner bug, hint-streak scoping across a phase boundary
+    plus decline-resets-streak, and last-exercise track completion.
+    `tests/run_scenario_prompt.md` is the reusable agent prompt that plays
+    both Sage and the scripted learner, executes real commands, and grades
+    against each scenario's assertion checklist. See `tests/README.md`.
+- **`tests/test_check_progress_schema.py` + `tests/fixtures/`.** The
+  checker itself is plain deterministic code, so it now has unit tests
+  against seven fixtures (a valid progress file, a valid track-completion
+  state, and five invalid variants each isolating one violation) instead of
+  relying on an expensive Tier 2 run to notice a bug in it — which is
+  exactly how the `next_up`/`warn()` bug below shipped in the first place.
+  Verified the new test would have caught that exact bug by reverting the
+  fix and confirming it fails.
+- **`.github/workflows/tier1-checks.yml`.** Runs the Tier 1 checker's unit
+  tests and a plugin-manifest sanity check on every push/PR to `main` — Tier
+  1 is now an actual automated gate, not a script someone has to remember to
+  run.
+- **Pre-release checklist in `tests/README.md`/`CONTRIBUTING.md`.** Bumping
+  the plugin version now requires running all five Tier 2 scenarios (not
+  just the ones nearest the change) and recording the result in the
+  CHANGELOG entry, so "the harness was run" is checkable later.
+
+### Fixed
+- **Found by actually running the harness against the live spec (scenarios
+  02, 03, 05 — see `tests/scenarios/`):**
+  - Progress Rule 1 ("Checkpoints are explicit. Write ONLY on `/checkpoint`
+    or learner confirmation") read as an absolute gate on every field write,
+    contradicting Rules 5/6/8 and Step 6b, which already mandate immediate,
+    unconditional writes for `completed_exercises`, `topic_confidence`/
+    `review_due`, and the hint streaks. Reworded to make explicit that Rule 1
+    governs the narrated full-file save, not the field-level writes other
+    rules already require — an interrupted session shouldn't lose those.
+  - `tests/check_progress_schema.py`'s `next_up: null` advisory was
+    implemented as `warn(label, True, detail)` — since `warn()` only emits
+    `WARN` on a falsy condition, this line could never print anything but
+    `PASS`, silently suppressing the "verify track completion manually"
+    reminder in exactly the case it exists to flag. Added a dedicated
+    `note()` helper for unconditional advisories and switched this check to
+    use it.
+  - The Axis Re-Calibration section's two threshold bullets were worded
+    asymmetrically — only the `low_hint_streak` bullet stated "at the next
+    phase transition," leaving it ambiguous whether `high_hint_streak`'s
+    offer could also surface at a plain exercise-complete menu. Made
+    explicit that both signals are checked only at phase-transition points.
+
+### Verified
+- **Full Tier 2 pre-release run (all five scenarios) against this
+  `SKILL.md`/`curricula/python-basics.md`, live via an agent playing both
+  Sage and each scripted learner:**
+  - `01-onboarding-and-profile-location`: 6/6 PASS.
+  - `02-topic-key-consistency`: 5/5 PASS.
+  - `03-toolchain-vs-learner-bug`: 6/6 PASS.
+  - `04-hint-streak-scoping-and-decline`: first run surfaced 4/5 PASS, 1
+    FAIL — but the FAIL was a bug in the *scenario itself* (it asserted a
+    fresh recalibration offer after `P1-comprehension-refactor`, which isn't
+    Phase 1's last exercise, so per SKILL.md's phase-transition-gated
+    mechanism no offer was ever going to fire there). Fixed the scenario to
+    assert at `P1-json-roundtrip` (Phase 1's actual last exercise) instead;
+    also tightened the Axis Re-Calibration wording asymmetry noted above.
+    Re-ran end-to-end (fresh scratch project, all 7 steps replayed with real
+    exercises/verify runs): 6/6 PASS, including the two new assertions that
+    the offer correctly stays silent at both non-transition points and
+    re-fires as a genuinely fresh signal at the real Phase 1→2 transition.
+  - `05-track-completion-handling`: 5/6 PASS, 1 "FAIL" that was the
+    `check_progress_schema.py` bug documented above, not a spec issue.
+  - **Net result: all five Tier 2 scenarios pass cleanly against the current
+    `SKILL.md` and `curricula/python-basics.md`.**
+- **Real-install smoke test.** Every scenario above (and the original 1.2.0
+  bug hunt) validated the spec via an agent reading `SKILL.md` directly and
+  role-playing Sage — never through Claude Code's actual plugin-loading and
+  skill-triggering machinery. Ran `claude -p --plugin-dir` against this repo
+  from a fresh scratch project with no prior profile/progress files: the
+  skill triggered correctly from unscripted natural language ("teach me
+  Python, let's start," no slash command), ran Profile Setup, offered the
+  bundled "Python Foundations" track via Round 0, skipped straight to Phase
+  0 on selection, and produced a real lesson (Steps 1-5, correctly bridging
+  to the stated Java/JS background including the `[]` truthiness
+  JS-vs-Python gotcha). The resulting `.sage-profile.md` and
+  `.sage-progress.json` — written by the real mechanism, not staged — pass
+  `check_progress_schema.py` with 0 failures. (`AskUserQuestion` isn't
+  available in headless `-p` mode; Sage correctly degraded to plain
+  numbered questions instead of erroring.) `claude plugin validate .` also
+  passes.
+
 ## [1.2.0] — 2026-07-01
 
 ### Added

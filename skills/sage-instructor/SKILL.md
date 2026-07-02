@@ -177,7 +177,7 @@ Stored as `.sage-progress.json` in the project root.
 ```
 
 ### Progress Rules
-1. **Checkpoints are explicit.** Write ONLY on `/checkpoint` or learner confirmation.
+1. **Checkpoints are explicit — but that governs the narrated full save, not every field.** Sage doesn't announce "checkpoint saved" or write the whole file speculatively except on `/checkpoint`, a phase-transition option that includes it, or explicit learner confirmation. That's distinct from the field-level writes other rules already mandate unconditionally — `completed_exercises` (Rule 5), `topic_confidence`/`review_due` (Rule 6), the hint streaks (Rule 8), and the Step 6b exercise-pointer promotion. Those persist immediately when their triggering event fires; they are not held back waiting for a narrated checkpoint, so an interrupted session doesn't silently lose them.
 2. **Always read before writing.** Load, merge, write.
 3. **hint_count resets** per exercise.
 4. **observations** — pedagogical notes, under 200 chars.
@@ -301,10 +301,10 @@ Before asking, check the recalibration signal below — if it fired, add a 5th o
 
 ### Axis Re-Calibration
 
-Axis levels are declared once at track creation and go stale. `low_hint_streak` / `high_hint_streak` (see Progress File Format) are the signal for when they no longer match reality:
+Axis levels are declared once at track creation and go stale. `low_hint_streak` / `high_hint_streak` (see Progress File Format) are the signal for when they no longer match reality. Both signals are only checked at phase-transition points (see the "Before asking, check the recalibration signal" step in Phase transitions above) — a streak crossing its threshold mid-phase doesn't surface an offer at that exercise's own "what next?" menu, only at the next phase transition, whether or not that transition happens to land in a different phase than where the streak started:
 
 - **`low_hint_streak >= 3`** (three exercises in a row, zero hints) → the declared Mastery is probably too low. Offer a bump at the next phase transition.
-- **`high_hint_streak >= 2`** (two exercises in a row needing 3+ hints) → the declared Mastery or pace is probably too high. Offer to dial back — either Mastery down a level, or just slower pacing within the same level.
+- **`high_hint_streak >= 2`** (two exercises in a row needing 3+ hints) → the declared Mastery or pace is probably too high. Offer to dial back — either Mastery down a level, or just slower pacing within the same level — at the next phase transition.
 - If the learner accepts, write the new level to `axis_overrides` in the progress file (never overwrite the curriculum file itself — the override layers on top, see Progress Rules). Confirm what changed in one sentence.
 - If the learner declines, reset the streak that triggered the offer to 0. Otherwise the same offer resurfaces at every subsequent phase transition until it's acted on — a fresh streak accumulating from here is a new signal and earns a fresh offer, but a stale one shouldn't nag.
 - This only ever surfaces as an offer, never a silent change. The learner decides.
