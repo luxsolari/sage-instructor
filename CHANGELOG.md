@@ -19,6 +19,22 @@
     `tests/run_scenario_prompt.md` is the reusable agent prompt that plays
     both Sage and the scripted learner, executes real commands, and grades
     against each scenario's assertion checklist. See `tests/README.md`.
+- **`tests/test_check_progress_schema.py` + `tests/fixtures/`.** The
+  checker itself is plain deterministic code, so it now has unit tests
+  against seven fixtures (a valid progress file, a valid track-completion
+  state, and five invalid variants each isolating one violation) instead of
+  relying on an expensive Tier 2 run to notice a bug in it — which is
+  exactly how the `next_up`/`warn()` bug below shipped in the first place.
+  Verified the new test would have caught that exact bug by reverting the
+  fix and confirming it fails.
+- **`.github/workflows/tier1-checks.yml`.** Runs the Tier 1 checker's unit
+  tests and a plugin-manifest sanity check on every push/PR to `main` — Tier
+  1 is now an actual automated gate, not a script someone has to remember to
+  run.
+- **Pre-release checklist in `tests/README.md`/`CONTRIBUTING.md`.** Bumping
+  the plugin version now requires running all five Tier 2 scenarios (not
+  just the ones nearest the change) and recording the result in the
+  CHANGELOG entry, so "the harness was run" is checkable later.
 
 ### Fixed
 - **Found by actually running the harness against the live spec (scenarios

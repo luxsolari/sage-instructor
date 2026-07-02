@@ -1,0 +1,24 @@
+name: Tier 1 regression checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-progress-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Compile check
+        run: python3 -m py_compile tests/check_progress_schema.py tests/test_check_progress_schema.py
+      - name: Run checker unit tests against tests/fixtures/
+        run: python3 tests/test_check_progress_schema.py -v
+      - name: Validate plugin structure
+        run: |
+          test -f .claude-plugin/plugin.json
+          python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"

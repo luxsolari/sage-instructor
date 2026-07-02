@@ -24,3 +24,8 @@ CLAUDE.local.md
 # Never commit someone's actual progress/profile into the plugin repo.
 .sage-progress.json
 .sage-profile.md
+# ...except the checked-in, synthetic fixtures the Tier 1 harness tests
+# against (tests/fixtures/*/.sage-progress.json, .sage-profile.md) — those
+# are committed on purpose, no real learner data.
+!tests/fixtures/**/.sage-progress.json
+!tests/fixtures/**/.sage-profile.md
