@@ -140,6 +140,8 @@ Generate curriculum from `TEMPLATE.md`, confirm with learner, save to `curricula
 | `/switch TRACK` | Save current, load new. |
 | `/new-track` | Run Track Setup interview via AskUserQuestion. |
 
+`/tracks` status is one of three: **Active** (this track's `active_track`), **Started** (has a `tracks.<name>` entry but isn't active), **Not started** (no entry yet). `/switch TRACK` sets `active_track` to `TRACK`; if `tracks.<TRACK>` already exists, resume it exactly as-is (current phase, exercise, streaks, `axis_overrides` — untouched by whatever happened on the track just switched away from); if it doesn't exist yet, initialize a fresh entry at Phase 0 (same as a never-started track). Either way, switching is not onboarding — never re-run Track Setup just because `/switch` was called, even to a track with no entry yet.
+
 ### Meta
 | Command | Behavior |
 |---|---|

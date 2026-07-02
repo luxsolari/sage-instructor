@@ -1,5 +1,52 @@
 # Changelog
 
+## [1.5.0] — 2026-07-02
+
+### Added
+- **`skills/sage-instructor/curricula/rust-cli.md`.** Second bundled
+  curriculum — Rust CLI fundamentals building toward Ferrogrep, a
+  production search tool. Deliberately declares axes sharply different
+  from `python-basics` (`mastery: medium, consequence: high, intent:
+  output` vs. `low, low, growth`) so `/sage-switch` has an actual
+  posture change to get right or wrong, not just a second copy of the
+  same shape.
+- **`tests/scenarios/08-multi-track-switching.md`.** `/sage-tracks` and
+  `/sage-switch` had only ever existed alongside a single real curriculum —
+  never exercised with a second one actually present (see #2's "out of
+  scope for this pass" list). Checks progress isolation, hint-streak
+  isolation, and axis-posture isolation between two concurrently-tracked
+  courses, plus `/tracks` status accuracy across both.
+
+### Fixed
+- **Found while drafting scenario 08, before the live run:** `SKILL.md`'s
+  Track Management section gave `/tracks` and `/switch` one line each —
+  thin enough that status vocabulary (`active` vs. `started` vs. `not
+  started`) and switch semantics (resume an existing entry vs. initialize a
+  fresh one; never re-run Track Setup onboarding on switch) were only
+  inferable by chaining together Progress Rule 9 and Track Setup's Round-0
+  gating language, not stated directly. Added an explicit paragraph
+  spelling out both.
+
+### Verified
+- **`08-multi-track-switching`**: 8/8 PASS on the first live run. Progress,
+  hint-streak, and axis-override isolation between `python-basics` and
+  `rust-cli` all held under a live switch-and-back; teaching posture during
+  the rust-cli exercise was confirmed to match its own declared axes
+  (compressed concept+bridge, explicit no-black-boxes framing on the borrow
+  checker, efficient Steps 1-4), not leaked from python-basics.
+  - Toolchain limitation, disclosed not hidden: the run's machine had no
+    Rust toolchain installed, so the one rust-cli exercise was verified by
+    manual trace instead of a real `rustc` run — same class of gap Step
+    6b.3 already carves out as not counting against the exercise, but
+    graders of that specific transcript should know it's compiler-unverified.
+  - Soft finding, not acted on: rust-cli's `verify` command's `/tmp/`
+    temp-file path assumes a Unix-like shell. Left as-is — it matches the
+    existing convention in `TEMPLATE.md`'s own C++ example and the curriculum
+    scenario 06 generated live, and Sage's actual execution environment
+    (Git Bash) already provides a working `/tmp`.
+- Pre-release checklist (`tests/README.md`/`CONTRIBUTING.md`) updated from
+  "all seven" to "all eight" scenarios.
+
 ## [1.4.0] — 2026-07-02
 
 ### Added
