@@ -11,7 +11,10 @@ Open an issue describing: what you expected, what happened, and your Claude Code
 ## Plugin Development
 1. Clone the repo
 2. `claude plugin validate .` to verify structure
-3. Test locally: install from the local directory
+3. Test locally: `claude --plugin-dir .` from the repo root loads the plugin
+   for that session only — no marketplace or install step needed. After
+   editing `SKILL.md` or a curriculum mid-session, run `/reload-plugins` to
+   pick up the change without restarting.
 4. If you're editing `SKILL.md` or a curriculum's spec-level behavior (progress
    fields, verification, streaks, onboarding), run the relevant scenario(s) in
    `tests/scenarios/` — see `tests/README.md`. These are fixed regression

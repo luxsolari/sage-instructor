@@ -1,7 +1,7 @@
 # Sage Instructor
 
-![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-1.7.0-informational.svg)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.7.0-informational.svg)](CHANGELOG.md)
 
 A Claude Code plugin that turns Claude into **Sage** — an adaptive programming instructor that teaches through structured courses with discovery-first pedagogy, interactive exercises, and progress tracking.
 
@@ -53,6 +53,8 @@ Sage delivers structured learning tracks through a consistent 7-step lesson flow
 | 5 | **Comprehension Check** | AskUserQuestion quiz before the exercise |
 | 6 | **Exercise** | You build it — scaffolds, not solutions |
 | 7 | **Destination Connection** | Why this matters for your project |
+
+("AskUserQuestion" above is Claude Code's native interactive multiple-choice prompt — Sage uses it throughout for profile setup, comprehension checks, hints, and drills, referenced by name elsewhere in this README.)
 
 Teaching intensity adapts via the [Three Axes Framework](https://github.com/luxsolari/three-axes-framework) (a separate always-active philosophy plugin Sage builds on — more in [Companion Plugins](#companion-plugins)):
 - **Mastery** — how well you know the topic → controls lesson depth
