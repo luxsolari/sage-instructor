@@ -1,6 +1,21 @@
 # Changelog
 
-## [1.7.0] — 2026-07-02
+## [1.7.1] — 2026-07-02
+
+### Fixed
+- **`scripts/check_framework_drift.py` crashed on Windows exactly when it
+  had something real to show.** Discovered while doing a fourth documentation
+  pass over the upstream `three-axes-framework` repo: editing that repo's
+  `SKILL.md` (a command-naming fix, unrelated to this project) caused genuine
+  drift, and running the drift checker to confirm it crashed with
+  `UnicodeEncodeError` trying to print the diff — Windows consoles default
+  stdout to the system codepage (e.g. `cp1252`), which can't encode
+  characters like the "↓" in SKILL.md's tier diagram. Forced UTF-8 output via
+  `sys.stdout.reconfigure(encoding="utf-8")` at the top of `main()`. Verified
+  against the actual pending drift: the script now prints the diff correctly,
+  and the upstream change turned out to be cosmetic (command-name formatting,
+  not a conceptual framework change) — accepted as the new baseline via
+  `--update-snapshot` rather than requiring a `philosophy.md` edit.
 
 ### Added
 - **`three-axes-framework` declared as a `plugin.json` dependency.** Claude

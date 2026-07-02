@@ -36,6 +36,12 @@ def fetch_upstream() -> str:
 
 
 def main() -> int:
+    # Windows consoles default stdout to the system codepage (e.g. cp1252),
+    # which can't encode characters like "↓" in SKILL.md's tier diagram --
+    # crashing exactly when there's a real diff to show. Force UTF-8 output
+    # regardless of platform/terminal default.
+    sys.stdout.reconfigure(encoding="utf-8")
+
     update_snapshot = "--update-snapshot" in sys.argv
 
     try:
