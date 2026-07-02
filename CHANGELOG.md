@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.2.1] — 2026-07-02
 
 ### Added
 - **`tests/` regression harness.** Closes the gap where every fix in 1.2.0
@@ -81,6 +81,22 @@
     `check_progress_schema.py` bug documented above, not a spec issue.
   - **Net result: all five Tier 2 scenarios pass cleanly against the current
     `SKILL.md` and `curricula/python-basics.md`.**
+- **Real-install smoke test.** Every scenario above (and the original 1.2.0
+  bug hunt) validated the spec via an agent reading `SKILL.md` directly and
+  role-playing Sage — never through Claude Code's actual plugin-loading and
+  skill-triggering machinery. Ran `claude -p --plugin-dir` against this repo
+  from a fresh scratch project with no prior profile/progress files: the
+  skill triggered correctly from unscripted natural language ("teach me
+  Python, let's start," no slash command), ran Profile Setup, offered the
+  bundled "Python Foundations" track via Round 0, skipped straight to Phase
+  0 on selection, and produced a real lesson (Steps 1-5, correctly bridging
+  to the stated Java/JS background including the `[]` truthiness
+  JS-vs-Python gotcha). The resulting `.sage-profile.md` and
+  `.sage-progress.json` — written by the real mechanism, not staged — pass
+  `check_progress_schema.py` with 0 failures. (`AskUserQuestion` isn't
+  available in headless `-p` mode; Sage correctly degraded to plain
+  numbered questions instead of erroring.) `claude plugin validate .` also
+  passes.
 
 ## [1.2.0] — 2026-07-01
 
