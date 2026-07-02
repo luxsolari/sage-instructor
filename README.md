@@ -10,11 +10,12 @@ A Claude Code plugin that turns Claude into **Sage** — an adaptive programming
 ```
 You:   /sage-start
 
-Sage:  First time here — let's get your profile set up.
-       [...AskUserQuestion: languages, experience, learning style, tone...]
+Sage:  First time here — let's get your profile set up. (A few quick
+       questions: languages you know, experience level, learning style,
+       tone preference.)
 
-       Got it. Here's what's available:
-       [...AskUserQuestion: Python Foundations / Rust CLI Tools / Build a custom track...]
+       Got it. Here's what's available: Python Foundations, Rust CLI
+       Tools, or build something custom — which one?
 
 You:   Python Foundations
 
@@ -24,16 +25,15 @@ Sage:  Phase 0: Syntax & Flow. Let's start with variables and control flow —
        choice.
 
        Here's the shape:
-       ```python
-       def classify(n):
-           if n % 15 == 0:
-               return "FizzBuzz"
-           ...
-       ```
 
-       Quick check before you build it — what does `n % 15 == 0` catch that
-       checking `n % 3 == 0 and n % 5 == 0` separately would also catch?
-       [...AskUserQuestion...]
+           def classify(n):
+               if n % 15 == 0:
+                   return "FizzBuzz"
+               ...
+
+       Quick check before you build it — what does `n % 15 == 0` catch
+       that checking `n % 3 == 0 and n % 5 == 0` separately would also
+       catch?
 
        Your turn: write `P0-fizzbuzz`. I'll watch, not solve.
 ```
