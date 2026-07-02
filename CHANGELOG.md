@@ -73,9 +73,14 @@
     mechanism no offer was ever going to fire there). Fixed the scenario to
     assert at `P1-json-roundtrip` (Phase 1's actual last exercise) instead;
     also tightened the Axis Re-Calibration wording asymmetry noted above.
-    Re-run pending confirmation.
+    Re-ran end-to-end (fresh scratch project, all 7 steps replayed with real
+    exercises/verify runs): 6/6 PASS, including the two new assertions that
+    the offer correctly stays silent at both non-transition points and
+    re-fires as a genuinely fresh signal at the real Phase 1→2 transition.
   - `05-track-completion-handling`: 5/6 PASS, 1 "FAIL" that was the
     `check_progress_schema.py` bug documented above, not a spec issue.
+  - **Net result: all five Tier 2 scenarios pass cleanly against the current
+    `SKILL.md` and `curricula/python-basics.md`.**
 
 ## [1.2.0] — 2026-07-01
 
