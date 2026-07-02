@@ -1,5 +1,53 @@
 # Changelog
 
+## [1.4.0] — 2026-07-02
+
+### Added
+- **`tests/scenarios/07-axis-recalibration-accept.md`.** Scenario 04 only
+  ever exercised declining the recalibration offer; the **accept** branch
+  (write to `axis_overrides`, confirm the change) had never been live-tested.
+  This scenario triggers `low_hint_streak >= 3` (the "Mastery is probably too
+  low" signal, complementing 04's `high_hint_streak` coverage), accepts the
+  bump, then drives a second streak past threshold to confirm a later offer
+  is measured against the newly-applied level — a follow-up named in #2's
+  "out of scope for this pass" list.
+
+### Fixed
+- **Found while drafting scenario 07, before the live run:** the accept
+  branch of Axis Re-Calibration said to write `axis_overrides` and confirm
+  the change, but — unlike the decline branch — never said whether the
+  triggering streak resets. Left unresolved, an unreset streak could
+  immediately re-fire the same offer against the level Sage had just
+  applied. Added a rule: accepting resets the streak too, same as declining;
+  only a fresh streak against the new level earns a fresh offer.
+- **Found by the scenario 07 live run:** the phase-transition question's 5th
+  option (the recalibration offer) didn't say what happens to the other 4
+  options when it's picked — is it a standalone choice, or does it also mean
+  "start Phase N+1"? The live run inferred the latter (matching the
+  scenario's own script), but SKILL.md didn't say so. Added a rule: picking
+  the 5th option applies the recalibration and proceeds as if "Start Phase
+  N+1" had been picked; the standard menu isn't asked again afterward.
+
+### Verified
+- **`07-axis-recalibration-accept`**: 9/9 PASS on the first live run. Real
+  Python exercise scripts written and executed for real via `python`
+  (not `python3` — the machine's `python3` is a Windows Store stub, exactly
+  the toolchain-vs-learner-bug gotcha scenario 03 guards against); progress
+  file diffed at every checkpoint; `curricula/python-basics.md` on disk
+  confirmed unchanged (`git status`/`git diff` empty) throughout, i.e. the
+  override never leaked into the curriculum source.
+  - Soft finding (not acted on this pass): Progress Rule 10's topic-key
+    derivation example ("Variables, dynamic typing, truthiness" → `variables`)
+    is a 3-term bullet reduced to its first noun; Phase 1's "Lists, dicts,
+    sets, tuples" bullet is a 4-term coordinate list where none of the
+    exercises isolate to just one of those structures, and it's unclear
+    whether Rule 10 wants `lists` (strict first-term) or a compound key.
+    Same category of ambiguity as 1.3.0's `consequence`-derivation finding,
+    but orthogonal to axis recalibration — left for a future scenario/issue
+    rather than guessed at here.
+- Pre-release checklist (`tests/README.md`/`CONTRIBUTING.md`) updated from
+  "all six" to "all seven" scenarios.
+
 ## [1.3.0] — 2026-07-02
 
 ### Added
