@@ -52,7 +52,14 @@ Valid `.sage-profile.md`.
 4. Learner picks a **non-recalibration** option ("Save checkpoint and stop
    for now"), i.e. declines the offer.
 5. Learner starts Phase 1, completes `P1-list-ops` needing 3+ hints again.
-6. Learner completes `P1-comprehension-refactor`, also needing 3+ hints.
+6. Learner completes `P1-comprehension-refactor` (Phase 1's *second* of
+   three exercises — `P1-list-ops`, `P1-comprehension-refactor`,
+   `P1-json-roundtrip`, per `curricula/python-basics.md` — not its last),
+   also needing 3+ hints. `high_hint_streak` reaches the `>= 2` threshold
+   here, but this is **not** a phase-transition point.
+7. Learner completes `P1-json-roundtrip` (Phase 1's actual last exercise),
+   again needing 3+ hints so the streak isn't reset by a hint-free pass.
+   This IS the end of Phase 1 → the phase-transition AskUserQuestion fires.
 
 ## Assertions
 
@@ -68,10 +75,17 @@ Valid `.sage-profile.md`.
   no recalibration offer fires yet — the streak was reset in step 4, so this
   is only the first struggle exercise of a new streak (`high_hint_streak ==
   1`), below threshold.
-- `[behavioral]` After step 6 (second consecutive Phase 1 struggle exercise),
-  `high_hint_streak == 2` and a **fresh** recalibration offer is presented —
-  confirm this isn't suppressed as a repeat of the declined one (SKILL.md:
-  "a fresh streak accumulating from here is a new signal and earns a fresh
-  offer").
+- `[behavioral]` After step 6, `high_hint_streak == 2` (threshold met) but
+  **no** recalibration offer is presented — `P1-comprehension-refactor` is
+  not Phase 1's last exercise, so no phase-transition question fires at all
+  here, and per SKILL.md (Axis Re-Calibration: "Both signals are only
+  checked at phase-transition points") the signal isn't surfaced outside
+  one. Sage should show only the standard 4-option "Exercise complete. What
+  next?" menu, with no 5th option.
+- `[behavioral]` After step 7 (Phase 1's actual last exercise, phase
+  transition fires), `high_hint_streak == 3` and a **fresh** recalibration
+  offer is presented at the phase-transition question — confirm this isn't
+  suppressed as a repeat of the declined one (SKILL.md: "a fresh streak
+  accumulating from here is a new signal and earns a fresh offer").
 - `[mechanical]` `python3 tests/check_progress_schema.py <scratch-dir>` exits
   0 at every checkpoint.

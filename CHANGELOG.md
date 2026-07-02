@@ -53,6 +53,29 @@
     reminder in exactly the case it exists to flag. Added a dedicated
     `note()` helper for unconditional advisories and switched this check to
     use it.
+  - The Axis Re-Calibration section's two threshold bullets were worded
+    asymmetrically — only the `low_hint_streak` bullet stated "at the next
+    phase transition," leaving it ambiguous whether `high_hint_streak`'s
+    offer could also surface at a plain exercise-complete menu. Made
+    explicit that both signals are checked only at phase-transition points.
+
+### Verified
+- **Full Tier 2 pre-release run (all five scenarios) against this
+  `SKILL.md`/`curricula/python-basics.md`, live via an agent playing both
+  Sage and each scripted learner:**
+  - `01-onboarding-and-profile-location`: 6/6 PASS.
+  - `02-topic-key-consistency`: 5/5 PASS.
+  - `03-toolchain-vs-learner-bug`: 6/6 PASS.
+  - `04-hint-streak-scoping-and-decline`: first run surfaced 4/5 PASS, 1
+    FAIL — but the FAIL was a bug in the *scenario itself* (it asserted a
+    fresh recalibration offer after `P1-comprehension-refactor`, which isn't
+    Phase 1's last exercise, so per SKILL.md's phase-transition-gated
+    mechanism no offer was ever going to fire there). Fixed the scenario to
+    assert at `P1-json-roundtrip` (Phase 1's actual last exercise) instead;
+    also tightened the Axis Re-Calibration wording asymmetry noted above.
+    Re-run pending confirmation.
+  - `05-track-completion-handling`: 5/6 PASS, 1 "FAIL" that was the
+    `check_progress_schema.py` bug documented above, not a spec issue.
 
 ## [1.2.0] — 2026-07-01
 
