@@ -1,6 +1,6 @@
 {
   "name": "sage-instructor",
-  "version": "1.2.1",
+  "version": "1.5.0",
   "description": "Adaptive programming instructor — structured courses with discovery-first teaching, AskUserQuestion interactions, progress tracking, and pluggable curricula. Powered by the Three Axes Framework.",
   "author": {
     "name": "Lux Solari",

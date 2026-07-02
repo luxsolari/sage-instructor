@@ -1,5 +1,132 @@
 # Changelog
 
+## [1.5.0] — 2026-07-02
+
+### Added
+- **`skills/sage-instructor/curricula/rust-cli.md`.** Second bundled
+  curriculum — Rust CLI fundamentals building toward Ferrogrep, a
+  production search tool. Deliberately declares axes sharply different
+  from `python-basics` (`mastery: medium, consequence: high, intent:
+  output` vs. `low, low, growth`) so `/sage-switch` has an actual
+  posture change to get right or wrong, not just a second copy of the
+  same shape.
+- **`tests/scenarios/08-multi-track-switching.md`.** `/sage-tracks` and
+  `/sage-switch` had only ever existed alongside a single real curriculum —
+  never exercised with a second one actually present (see #2's "out of
+  scope for this pass" list). Checks progress isolation, hint-streak
+  isolation, and axis-posture isolation between two concurrently-tracked
+  courses, plus `/tracks` status accuracy across both.
+
+### Fixed
+- **Found while drafting scenario 08, before the live run:** `SKILL.md`'s
+  Track Management section gave `/tracks` and `/switch` one line each —
+  thin enough that status vocabulary (`active` vs. `started` vs. `not
+  started`) and switch semantics (resume an existing entry vs. initialize a
+  fresh one; never re-run Track Setup onboarding on switch) were only
+  inferable by chaining together Progress Rule 9 and Track Setup's Round-0
+  gating language, not stated directly. Added an explicit paragraph
+  spelling out both.
+
+### Verified
+- **`08-multi-track-switching`**: 8/8 PASS on the first live run. Progress,
+  hint-streak, and axis-override isolation between `python-basics` and
+  `rust-cli` all held under a live switch-and-back; teaching posture during
+  the rust-cli exercise was confirmed to match its own declared axes
+  (compressed concept+bridge, explicit no-black-boxes framing on the borrow
+  checker, efficient Steps 1-4), not leaked from python-basics.
+  - Toolchain limitation, disclosed not hidden: the run's machine had no
+    Rust toolchain installed, so the one rust-cli exercise was verified by
+    manual trace instead of a real `rustc` run — same class of gap Step
+    6b.3 already carves out as not counting against the exercise, but
+    graders of that specific transcript should know it's compiler-unverified.
+  - Soft finding, not acted on: rust-cli's `verify` command's `/tmp/`
+    temp-file path assumes a Unix-like shell. Left as-is — it matches the
+    existing convention in `TEMPLATE.md`'s own C++ example and the curriculum
+    scenario 06 generated live, and Sage's actual execution environment
+    (Git Bash) already provides a working `/tmp`.
+- Pre-release checklist (`tests/README.md`/`CONTRIBUTING.md`) updated from
+  "all seven" to "all eight" scenarios.
+
+## [1.4.0] — 2026-07-02
+
+### Added
+- **`tests/scenarios/07-axis-recalibration-accept.md`.** Scenario 04 only
+  ever exercised declining the recalibration offer; the **accept** branch
+  (write to `axis_overrides`, confirm the change) had never been live-tested.
+  This scenario triggers `low_hint_streak >= 3` (the "Mastery is probably too
+  low" signal, complementing 04's `high_hint_streak` coverage), accepts the
+  bump, then drives a second streak past threshold to confirm a later offer
+  is measured against the newly-applied level — a follow-up named in #2's
+  "out of scope for this pass" list.
+
+### Fixed
+- **Found while drafting scenario 07, before the live run:** the accept
+  branch of Axis Re-Calibration said to write `axis_overrides` and confirm
+  the change, but — unlike the decline branch — never said whether the
+  triggering streak resets. Left unresolved, an unreset streak could
+  immediately re-fire the same offer against the level Sage had just
+  applied. Added a rule: accepting resets the streak too, same as declining;
+  only a fresh streak against the new level earns a fresh offer.
+- **Found by the scenario 07 live run:** the phase-transition question's 5th
+  option (the recalibration offer) didn't say what happens to the other 4
+  options when it's picked — is it a standalone choice, or does it also mean
+  "start Phase N+1"? The live run inferred the latter (matching the
+  scenario's own script), but SKILL.md didn't say so. Added a rule: picking
+  the 5th option applies the recalibration and proceeds as if "Start Phase
+  N+1" had been picked; the standard menu isn't asked again afterward.
+
+### Verified
+- **`07-axis-recalibration-accept`**: 9/9 PASS on the first live run. Real
+  Python exercise scripts written and executed for real via `python`
+  (not `python3` — the machine's `python3` is a Windows Store stub, exactly
+  the toolchain-vs-learner-bug gotcha scenario 03 guards against); progress
+  file diffed at every checkpoint; `curricula/python-basics.md` on disk
+  confirmed unchanged (`git status`/`git diff` empty) throughout, i.e. the
+  override never leaked into the curriculum source.
+  - Soft finding (not acted on this pass): Progress Rule 10's topic-key
+    derivation example ("Variables, dynamic typing, truthiness" → `variables`)
+    is a 3-term bullet reduced to its first noun; Phase 1's "Lists, dicts,
+    sets, tuples" bullet is a 4-term coordinate list where none of the
+    exercises isolate to just one of those structures, and it's unclear
+    whether Rule 10 wants `lists` (strict first-term) or a compound key.
+    Same category of ambiguity as 1.3.0's `consequence`-derivation finding,
+    but orthogonal to axis recalibration — left for a future scenario/issue
+    rather than guessed at here.
+- Pre-release checklist (`tests/README.md`/`CONTRIBUTING.md`) updated from
+  "all six" to "all seven" scenarios.
+
+## [1.3.0] — 2026-07-02
+
+### Added
+- **`tests/scenarios/06-custom-track-creation.md`.** Every prior scenario
+  (01-05) and the 1.2.1 real-install smoke test picked the existing bundled
+  `python-basics` track at Track Setup Round 0. This scenario instead picks
+  "Build a custom track" and scripts the full Round 1-4 interview, closing
+  the last major untested path from a fresh install (see #2).
+
+### Fixed
+- **Found by the scenario 06 live run:** the Track Setup interview (Rounds
+  1-4) never explicitly directs Sage to derive the curriculum's
+  `consequence` axis field — only `mastery` (Round 3) and `intent` (Round 4)
+  have a stated mapping. The live run got `consequence` right anyway by
+  inferring it from the described project's stakes, but that was judgment,
+  not a followed instruction — a spec gap that happened not to bite this
+  time. Added an explicit rule: infer `consequence` from Round 2's answer
+  (no project/personal project → `low`; shared or stakes-bearing → `medium`
+  or `high`), rather than leaving it unspecified.
+
+### Verified
+- **`06-custom-track-creation`**: 8/8 PASS on the first live run — the first
+  scenario in this harness's history to pass clean without needing a fix
+  first. Confirmed via a real generated curriculum
+  (`curricula/rust-cli-grep.md`) with a `verify` command
+  (`rustc {file} -o /tmp/sage_out && /tmp/sage_out`) that was smoke-tested
+  for real, not just read as plausible-looking text; confirm-before-save was
+  checked by verifying the file didn't exist on disk between the curriculum
+  being displayed and the learner confirming it.
+- Pre-release checklist (`tests/README.md`/`CONTRIBUTING.md`) updated from
+  "all five" to "all six" scenarios.
+
 ## [1.2.1] — 2026-07-02
 
 ### Added

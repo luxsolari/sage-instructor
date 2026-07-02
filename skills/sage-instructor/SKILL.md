@@ -94,6 +94,8 @@ If applicable, ask: "Want to start one of these, or build something custom?" Opt
 **Round 3** — "How much do you know already?" Options: From scratch, Basics but rusty, Intermediate, Know a related language
 **Round 4** — "What's the priority?" Options: Pure learning (Growth), Build while learning (Balanced), Get productive fast (Output)
 
+Rounds 3 and 4 map directly to the curriculum's `mastery` and `intent` axis fields (Round 4's options are literally labeled with the axis values). `consequence` has no dedicated round — infer it from Round 2's answer instead: no stated project, or a personal/learning-only one → `low`; a project the learner describes as shared, user-facing, or otherwise stakes-bearing → `medium` or `high`, using judgment on what was actually described, not a fixed default.
+
 Generate curriculum from `TEMPLATE.md`, confirm with learner, save to `curricula/<track>.md`.
 
 ---
@@ -137,6 +139,8 @@ Generate curriculum from `TEMPLATE.md`, confirm with learner, save to `curricula
 | `/tracks` | List curricula with status. |
 | `/switch TRACK` | Save current, load new. |
 | `/new-track` | Run Track Setup interview via AskUserQuestion. |
+
+`/tracks` status is one of three: **Active** (this track's `active_track`), **Started** (has a `tracks.<name>` entry but isn't active), **Not started** (no entry yet). `/switch TRACK` sets `active_track` to `TRACK`; if `tracks.<TRACK>` already exists, resume it exactly as-is (current phase, exercise, streaks, `axis_overrides` — untouched by whatever happened on the track just switched away from); if it doesn't exist yet, initialize a fresh entry at Phase 0 (same as a never-started track). Either way, switching is not onboarding — never re-run Track Setup just because `/switch` was called, even to a track with no entry yet.
 
 ### Meta
 | Command | Behavior |
@@ -297,7 +301,7 @@ options:
   - "Take a challenge that combines this phase's concepts"
   - "Save checkpoint and stop for now"
 ```
-Before asking, check the recalibration signal below — if it fired, add a 5th option surfacing it. The streak is exercise-scoped, not phase-scoped, so don't frame it as "this phase" (it may span the phase boundary) — say "the last few exercises" instead: "The last few exercises went by without a hint — bump Mastery to medium?" or "The last few exercises were a grind — dial the pace back?"
+Before asking, check the recalibration signal below — if it fired, add a 5th option surfacing it. The streak is exercise-scoped, not phase-scoped, so don't frame it as "this phase" (it may span the phase boundary) — say "the last few exercises" instead: "The last few exercises went by without a hint — bump Mastery to medium?" or "The last few exercises were a grind — dial the pace back?" Picking the 5th option means both things at once — apply the recalibration (see Axis Re-Calibration) and proceed as if "Start Phase N+1" had been picked. Don't ask the four standard options again afterward.
 
 ### Axis Re-Calibration
 
@@ -305,7 +309,7 @@ Axis levels are declared once at track creation and go stale. `low_hint_streak` 
 
 - **`low_hint_streak >= 3`** (three exercises in a row, zero hints) → the declared Mastery is probably too low. Offer a bump at the next phase transition.
 - **`high_hint_streak >= 2`** (two exercises in a row needing 3+ hints) → the declared Mastery or pace is probably too high. Offer to dial back — either Mastery down a level, or just slower pacing within the same level — at the next phase transition.
-- If the learner accepts, write the new level to `axis_overrides` in the progress file (never overwrite the curriculum file itself — the override layers on top, see Progress Rules). Confirm what changed in one sentence.
+- If the learner accepts, write the new level to `axis_overrides` in the progress file (never overwrite the curriculum file itself — the override layers on top, see Progress Rules). Confirm what changed in one sentence. Then reset the streak that triggered the offer to 0 — the same streak count shouldn't immediately re-trigger a second offer against the level Sage just applied; a fresh streak accumulating from here, measured against the new level, is a new signal and earns its own fresh offer.
 - If the learner declines, reset the streak that triggered the offer to 0. Otherwise the same offer resurfaces at every subsequent phase transition until it's acted on — a fresh streak accumulating from here is a new signal and earns a fresh offer, but a stale one shouldn't nag.
 - This only ever surfaces as an offer, never a silent change. The learner decides.
 
