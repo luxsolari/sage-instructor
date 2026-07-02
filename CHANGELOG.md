@@ -20,6 +20,24 @@
     both Sage and the scripted learner, executes real commands, and grades
     against each scenario's assertion checklist. See `tests/README.md`.
 
+### Fixed
+- **Found by actually running the harness against the live spec (scenarios
+  02, 03, 05 — see `tests/scenarios/`):**
+  - Progress Rule 1 ("Checkpoints are explicit. Write ONLY on `/checkpoint`
+    or learner confirmation") read as an absolute gate on every field write,
+    contradicting Rules 5/6/8 and Step 6b, which already mandate immediate,
+    unconditional writes for `completed_exercises`, `topic_confidence`/
+    `review_due`, and the hint streaks. Reworded to make explicit that Rule 1
+    governs the narrated full-file save, not the field-level writes other
+    rules already require — an interrupted session shouldn't lose those.
+  - `tests/check_progress_schema.py`'s `next_up: null` advisory was
+    implemented as `warn(label, True, detail)` — since `warn()` only emits
+    `WARN` on a falsy condition, this line could never print anything but
+    `PASS`, silently suppressing the "verify track completion manually"
+    reminder in exactly the case it exists to flag. Added a dedicated
+    `note()` helper for unconditional advisories and switched this check to
+    use it.
+
 ## [1.2.0] — 2026-07-01
 
 ### Added

@@ -40,6 +40,13 @@ def warn(label, condition, detail=""):
     return condition
 
 
+def note(label, detail=""):
+    """Unconditional advisory -- always surfaces as NOTE with its detail
+    visible, for things the script can observe but not itself verify
+    (e.g. 'this requires a manual check'). Never fails the run."""
+    results.append(("NOTE", label, detail))
+
+
 def check_track(name, t):
     prefix = f"tracks.{name}"
 
@@ -95,8 +102,7 @@ def check_track(name, t):
     next_up = t.get("next_up")
     current_exercise = t.get("current_exercise")
     if next_up is None:
-        warn(f"{prefix}.next_up is null -> should mean track completion (Step 6b point 8)",
-             True,
+        note(f"{prefix}.next_up is null -> should mean track completion (Step 6b point 8)",
              "verify manually that this track's curriculum has no exercises left")
     else:
         check(f"{prefix}.next_up looks like an exercise slug when not null",
@@ -152,7 +158,8 @@ def print_report():
         print(line)
     fails = sum(1 for s, _, _ in results if s == "FAIL")
     warns = sum(1 for s, _, _ in results if s == "WARN")
-    print(f"\n{len(results)} checks, {fails} failed, {warns} warned.")
+    notes = sum(1 for s, _, _ in results if s == "NOTE")
+    print(f"\n{len(results)} checks, {fails} failed, {warns} warned, {notes} noted.")
 
 
 if __name__ == "__main__":
