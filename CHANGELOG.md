@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.7.0] — 2026-07-02
+
+### Added
+- **`three-axes-framework` declared as a `plugin.json` dependency.** Claude
+  Code has no mechanism for one plugin to read another's files at runtime
+  (confirmed against the platform docs before building anything here — no
+  `${CLAUDE_PLUGIN_ROOT}`-equivalent for a sibling plugin, no live cross-
+  plugin file access), so this doesn't make `philosophy.md` a live view onto
+  the standalone plugin. What it does do: installing sage-instructor now
+  auto-installs `three-axes-framework` alongside it, so a learner gets the
+  general always-active coding philosophy applied outside teaching sessions
+  too, not just Sage's teaching-specific calibration. Requires sage-
+  instructor to be listed in the same marketplace (`lux-solari-plugins`) as
+  `three-axes-framework` — bare-string dependencies resolve within the
+  declaring plugin's own marketplace; a companion change lists sage-
+  instructor there.
+- **`scripts/check_framework_drift.py`.** `references/philosophy.md` is a
+  teaching-specific adaptation of the standalone plugin's framework, not a
+  copy — lesson-step calibration, curriculum-generation axis inference, and
+  other machinery that only exists here. A sync script that literally
+  overwrote it with upstream content would destroy that adaptation. Instead
+  this fetches the upstream `SKILL.md`, diffs it against a cached snapshot
+  of the version `philosophy.md` was last reconciled against, and prints
+  the diff so a maintainer can decide by hand whether the change matters
+  for teaching contexts — never auto-overwrites. `--update-snapshot`
+  accepts the current upstream content as the new baseline after manual
+  reconciliation.
+- `skills/sage-instructor/references/.three-axes-upstream-snapshot.md` —
+  the initial baseline snapshot, captured from the upstream repo at commit
+  `0f6c8db` (2026-03-25, marketplace-published as `three-axes-framework`
+  v1.1.3).
+
 ## [1.6.0] — 2026-07-02
 
 ### Added

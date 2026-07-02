@@ -107,7 +107,8 @@ Or manually: copy `skills/sage-instructor/curricula/TEMPLATE.md`, fill in the YA
 
 ## Companion Plugins
 
-- **[Three Axes Framework](https://github.com/luxsolari/three-axes-framework)** — the always-active philosophy plugin that Sage builds on. Sage bundles the framework in `references/philosophy.md`, but the standalone plugin applies it to *all* development work, not just learning sessions.
+- **[Three Axes Framework](https://github.com/luxsolari/three-axes-framework)** — the always-active philosophy plugin that Sage builds on. Declared as a `plugin.json` dependency, so installing sage-instructor installs it automatically: you get the general framework applied to *all* development work, not just learning sessions, on top of Sage's teaching-specific calibration.
+- `skills/sage-instructor/references/philosophy.md` is **not** a copy of that plugin's framework doc — it's a teaching-specific adaptation (lesson-step calibration, curriculum-generation axis inference, and other machinery that only makes sense inside a structured course). There's no live sync between the two; run `python3 scripts/check_framework_drift.py` to check whether the upstream framework has changed since `philosophy.md` was last reconciled against it (see the script's docstring for details).
 
 ## License
 
