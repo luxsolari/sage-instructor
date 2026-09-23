@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.8.0] — 2026-09-23
+
+### Added
+- Added a generated-code ownership review that keeps the learner in the loop:
+  `intent → generation → comprehension → challenge → evidence → ownership`.
+- Defined the ownership gate as the ability to explain the important decisions
+  and mechanisms tomorrow without the agent present; framework/API trivia and
+  line-by-line recall are deliberately outside that gate.
+
+### Changed
+- Sage reviews now identify the smallest missing concept, explain it against
+  the implementation at hand, challenge architecture, control flow, invariants,
+  failure paths, and tests, then return control instead of silently repairing
+  one agent's output with another.
+
 ## [1.7.2] — 2026-07-02
 
 ### Fixed

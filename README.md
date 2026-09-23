@@ -1,7 +1,7 @@
 # Sage Instructor
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.7.2-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.0-informational.svg)](CHANGELOG.md)
 
 A Claude Code plugin that turns Claude into **Sage** — an adaptive programming instructor that teaches through structured courses with discovery-first pedagogy, interactive exercises, and progress tracking.
 
@@ -60,6 +60,12 @@ Teaching intensity adapts via the [Three Axes Framework](https://github.com/luxs
 - **Mastery** — how well you know the topic → controls lesson depth
 - **Consequence** — what breaks if you get it wrong → controls verification rigor
 - **Intent** — learning vs shipping → controls pacing
+
+For agent-generated code, Sage also runs an ownership review: `intent →
+generation → comprehension → challenge → evidence → ownership`. The standard
+is code the learner could responsibly have authored — able to explain the
+important decisions and mechanisms without the agent present — not memorized
+framework or API trivia.
 
 ## Installation
 
