@@ -10,7 +10,8 @@
 - Verified with `python3 tests/test_check_progress_schema.py`,
   `python3 -m unittest discover -s tests -p 'test_*.py'` (7 tests each), and
   `git diff --check`.
-- Open: no release commit, tag, push, or hosted CI run has been made.
+- Published: commit `28ebed8` and tag `sage-instructor-v1.8.0` are on GitHub.
+  The Codex marketplace release and its validation completed successfully.
 - Relevant files: `skills/sage-instructor/SKILL.md`,
   `skills/sage-instructor/references/philosophy.md`, `README.md`, and
   `CHANGELOG.md`.
